@@ -9,24 +9,75 @@ const api = axios.create({
   },
 });
 
-// Request interceptor for adding auth tokens if needed
+// Loading state management
+export let isApiLoading = false;
+export const setApiLoading = (loading: boolean) => {
+  isApiLoading = loading;
+};
+
+// Request interceptor for adding auth tokens and loading state
 api.interceptors.request.use(
   (config) => {
+    setApiLoading(true);
+    
     // Add auth token if available
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add timestamp to prevent caching
+    config.params = {
+      ...config.params,
+      _t: Date.now()
+    };
+    
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    setApiLoading(false);
+    return Promise.reject(error);
+  }
 );
 
-// Response interceptor for error handling
+// Response interceptor for error handling and loading state
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    setApiLoading(false);
+    return response;
+  },
   (error) => {
-    console.error('API Error:', error);
+    setApiLoading(false);
+    
+    // Handle common errors
+    if (error.response) {
+      const { status, data } = error.response;
+      
+      switch (status) {
+        case 401:
+          // Unauthorized - clear token and redirect to login
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userData');
+          window.location.href = '/login';
+          break;
+        case 403:
+          console.error('Access denied:', data.message || 'Insufficient permissions');
+          break;
+        case 404:
+          console.error('Resource not found:', error.config.url);
+          break;
+        case 500:
+          console.error('Server error:', data.message || 'Internal server error');
+          break;
+        default:
+          console.error('API Error:', data.message || error.message);
+      }
+    } else if (error.request) {
+      console.error('Network Error: No response received');
+    } else {
+      console.error('Request Error:', error.message);
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -92,13 +143,130 @@ export const examAPI = {
 };
 
 // Dashboard API
+// Dashboard API
 export const dashboardAPI = {
-  getMetrics: async () => {
-    const response = await api.get('/dashboard/metrics');
+  getMetrics: async (role: string) => {
+    const response = await api.get(`/dashboard/metrics?role=${role}`);
     return response.data;
   },
-  getChartData: async () => {
-    const response = await api.get('/dashboard/chart-data');
+  getChartData: async (role: string) => {
+    const response = await api.get(`/dashboard/chart-data?role=${role}`);
+    return response.data;
+  },
+};
+
+// Authentication API
+export const authAPI = {
+  login: async (credentials: { username: string; password: string }) => {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  },
+  logout: async () => {
+    const response = await api.post('/auth/logout');
+    return response.data;
+  },
+  verifyToken: async () => {
+    const response = await api.get('/auth/verify');
+    return response.data;
+  },
+  refreshToken: async () => {
+    const response = await api.post('/auth/refresh');
+    return response.data;
+  },
+};
+
+// User Profile API
+export const profileAPI = {
+  get: async () => {
+    const response = await api.get('/profile');
+    return response.data;
+  },
+  update: async (data: any) => {
+    const response = await api.put('/profile', data);
+    return response.data;
+  },
+  uploadAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    const response = await api.post('/profile/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+};
+
+// Role-specific APIs
+export const studentAPI = {
+  getProfile: async () => {
+    const response = await api.get('/student/profile');
+    return response.data;
+  },
+  getDashboard: async () => {
+    const response = await api.get('/student/dashboard');
+    return response.data;
+  },
+  getFeeStatus: async () => {
+    const response = await api.get('/student/fees');
+    return response.data;
+  },
+  getHostelInfo: async () => {
+    const response = await api.get('/student/hostel');
+    return response.data;
+  },
+  getLibraryBooks: async () => {
+    const response = await api.get('/student/library');
+    return response.data;
+  },
+  getExamRegistrations: async () => {
+    const response = await api.get('/student/exams');
+    return response.data;
+  },
+};
+
+export const staffAPI = {
+  getDashboard: async () => {
+    const response = await api.get('/staff/dashboard');
+    return response.data;
+  },
+  manageHostel: async () => {
+    const response = await api.get('/staff/hostel/manage');
+    return response.data;
+  },
+  manageLibrary: async () => {
+    const response = await api.get('/staff/library/manage');
+    return response.data;
+  },
+  manageExams: async () => {
+    const response = await api.get('/staff/exams/manage');
+    return response.data;
+  },
+};
+
+export const adminAPI = {
+  getDashboard: async () => {
+    const response = await api.get('/admin/dashboard');
+    return response.data;
+  },
+  getAllUsers: async () => {
+    const response = await api.get('/admin/users');
+    return response.data;
+  },
+  createUser: async (userData: any) => {
+    const response = await api.post('/admin/users', userData);
+    return response.data;
+  },
+  updateUser: async (userId: string, userData: any) => {
+    const response = await api.put(`/admin/users/${userId}`, userData);
+    return response.data;
+  },
+  deleteUser: async (userId: string) => {
+    const response = await api.delete(`/admin/users/${userId}`);
+    return response.data;
+  },
+  getSystemMetrics: async () => {
+    const response = await api.get('/admin/metrics');
     return response.data;
   },
 };

@@ -20,6 +20,12 @@ const navItems = [
     allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
   },
   {
+    title: 'Profile',
+    href: '/profile',
+    icon: GraduationCap,
+    allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
+  },
+  {
     title: 'Student Admission',
     href: '/admission',
     icon: UserPlus,
@@ -29,13 +35,13 @@ const navItems = [
     title: 'Fee Payment',
     href: '/fees',
     icon: CreditCard,
-    allowedRoles: ['admin'] as UserRole[],
+    allowedRoles: ['admin', 'student'] as UserRole[],
   },
   {
     title: 'Hostel Allocation',
     href: '/hostel',
     icon: Building2,
-    allowedRoles: ['admin'] as UserRole[],
+    allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
   },
   {
     title: 'Library',

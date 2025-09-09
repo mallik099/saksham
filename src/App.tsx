@@ -8,6 +8,7 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { Layout } from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import AdmissionForm from "./pages/AdmissionForm";
 import FeePayment from "./pages/FeePayment";
 import HostelAllocation from "./pages/HostelAllocation";
@@ -31,21 +32,18 @@ const App = () => (
                 <Layout>
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/admission" element={
                       <ProtectedRoute allowedRoles={['admin', 'staff']}>
                         <AdmissionForm />
                       </ProtectedRoute>
                     } />
                     <Route path="/fees" element={
-                      <ProtectedRoute allowedRoles={['admin']}>
+                      <ProtectedRoute allowedRoles={['admin', 'student']}>
                         <FeePayment />
                       </ProtectedRoute>
                     } />
-                    <Route path="/hostel" element={
-                      <ProtectedRoute allowedRoles={['admin']}>
-                        <HostelAllocation />
-                      </ProtectedRoute>
-                    } />
+                    <Route path="/hostel" element={<HostelAllocation />} />
                     <Route path="/library" element={<LibraryManagement />} />
                     <Route path="/exam" element={<ExamRegistration />} />
                     <Route path="*" element={<NotFound />} />
