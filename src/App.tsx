@@ -7,6 +7,9 @@ import { Layout } from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import AdmissionForm from "./pages/AdmissionForm";
 import FeePayment from "./pages/FeePayment";
+import HostelAllocation from "./pages/HostelAllocation";
+import LibraryManagement from "./pages/LibraryManagement";
+import ExamRegistration from "./pages/ExamRegistration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,9 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/admission" element={<AdmissionForm />} />
             <Route path="/fees" element={<FeePayment />} />
+            <Route path="/hostel" element={<HostelAllocation />} />
+            <Route path="/library" element={<LibraryManagement />} />
+            <Route path="/exam" element={<ExamRegistration />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
