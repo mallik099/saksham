@@ -64,36 +64,36 @@ export default function Dashboard() {
         
         // Simulate API calls with mock data for demonstration
         const mockMetrics: DashboardMetrics = {
-          totalAdmissions: 1247,
-          feeCollectionPercentage: 87.5,
-          hostelOccupancyPercentage: 92.3,
-          libraryBorrowedBooks: 534,
-          examRegistrations: 856,
+          totalAdmissions: Math.floor(Math.random() * 100) + 1200,
+          feeCollectionPercentage: Math.floor(Math.random() * 20) + 80,
+          hostelOccupancyPercentage: Math.floor(Math.random() * 15) + 85,
+          libraryBorrowedBooks: Math.floor(Math.random() * 100) + 500,
+          examRegistrations: Math.floor(Math.random() * 100) + 800,
         };
 
         const mockChartData: ChartData = {
           monthlyAdmissions: [
-            { month: 'Jan', admissions: 145 },
-            { month: 'Feb', admissions: 132 },
-            { month: 'Mar', admissions: 178 },
-            { month: 'Apr', admissions: 165 },
-            { month: 'May', admissions: 142 },
-            { month: 'Jun', admissions: 189 },
+            { month: 'Jan', admissions: 145 + Math.floor(Math.random() * 20) },
+            { month: 'Feb', admissions: 132 + Math.floor(Math.random() * 20) },
+            { month: 'Mar', admissions: 178 + Math.floor(Math.random() * 20) },
+            { month: 'Apr', admissions: 165 + Math.floor(Math.random() * 20) },
+            { month: 'May', admissions: 142 + Math.floor(Math.random() * 20) },
+            { month: 'Jun', admissions: 189 + Math.floor(Math.random() * 20) },
           ],
           feeCollection: [
-            { month: 'Jan', collected: 85000, pending: 15000 },
-            { month: 'Feb', collected: 92000, pending: 8000 },
-            { month: 'Mar', collected: 88000, pending: 12000 },
-            { month: 'Apr', collected: 95000, pending: 5000 },
-            { month: 'May', collected: 87000, pending: 13000 },
-            { month: 'Jun', collected: 98000, pending: 2000 },
+            { month: 'Jan', collected: 85000 + Math.floor(Math.random() * 5000), pending: 15000 - Math.floor(Math.random() * 3000) },
+            { month: 'Feb', collected: 92000 + Math.floor(Math.random() * 5000), pending: 8000 - Math.floor(Math.random() * 2000) },
+            { month: 'Mar', collected: 88000 + Math.floor(Math.random() * 5000), pending: 12000 - Math.floor(Math.random() * 3000) },
+            { month: 'Apr', collected: 95000 + Math.floor(Math.random() * 5000), pending: 5000 - Math.floor(Math.random() * 1000) },
+            { month: 'May', collected: 87000 + Math.floor(Math.random() * 5000), pending: 13000 - Math.floor(Math.random() * 3000) },
+            { month: 'Jun', collected: 98000 + Math.floor(Math.random() * 5000), pending: 2000 - Math.floor(Math.random() * 500) },
           ],
           courseDistribution: [
-            { course: 'Computer Science', students: 342, color: COLORS[0] },
-            { course: 'Engineering', students: 298, color: COLORS[1] },
-            { course: 'Business', students: 234, color: COLORS[2] },
-            { course: 'Arts', students: 187, color: COLORS[3] },
-            { course: 'Commerce', students: 186, color: COLORS[4] },
+            { course: 'Computer Science', students: 342 + Math.floor(Math.random() * 20), color: COLORS[0] },
+            { course: 'Engineering', students: 298 + Math.floor(Math.random() * 20), color: COLORS[1] },
+            { course: 'Business', students: 234 + Math.floor(Math.random() * 20), color: COLORS[2] },
+            { course: 'Arts', students: 187 + Math.floor(Math.random() * 20), color: COLORS[3] },
+            { course: 'Commerce', students: 186 + Math.floor(Math.random() * 20), color: COLORS[4] },
           ],
         };
 
@@ -113,6 +113,12 @@ export default function Dashboard() {
     };
 
     fetchDashboardData();
+
+    // Set up real-time polling every 30 seconds
+    const interval = setInterval(fetchDashboardData, 30000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, []);
 
   const metricCards = [
