@@ -7,6 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { feePaymentAPI } from '@/services/api';
 import { Loader2, CreditCard } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { auditLogger } from '@/utils/auditLogger';
+import { validateFeePayment } from '@/utils/validation';
+import { ErrorHandler } from '@/utils/errorHandler';
 
 interface FeeFormData {
   studentId: string;
@@ -16,8 +20,9 @@ interface FeeFormData {
 }
 
 export default function FeePayment() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<FeeFormData>({
-    studentId: '',
+    studentId: user?.studentId || '',
     paymentAmount: '',
     paymentMode: '',
     transactionId: '',
@@ -64,30 +69,49 @@ export default function FeePayment() {
       return;
     }
 
+    // Enhanced validation
+    const feeValidation = validateFeePayment(Number(formData.paymentAmount), { maxAmount: 200000 });
+    if (!feeValidation.isValid) {
+      toast({
+        title: 'Validation Error',
+        description: feeValidation.errors.join(', '),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await feePaymentAPI.submit({
+      const paymentData = {
         ...formData,
         paymentAmount: Number(formData.paymentAmount),
-      });
+      };
+      
+      await feePaymentAPI.submit(paymentData);
+      
+      // Audit logging
+      auditLogger.log(
+        user?.id || 'unknown',
+        user?.role || 'student',
+        'FEE_PAYMENT',
+        `Fee payment of ₹${formData.paymentAmount} processed for student ${formData.studentId}`,
+        formData.studentId
+      );
+      
       toast({
         title: 'Payment Recorded',
-        description: 'Fee payment has been successfully recorded.',
+        description: `Fee payment of ₹${Number(formData.paymentAmount).toLocaleString('en-IN')} has been successfully recorded.`,
       });
+      
       // Reset form
       setFormData({
-        studentId: '',
+        studentId: user?.studentId || '',
         paymentAmount: '',
         paymentMode: '',
         transactionId: '',
       });
     } catch (error) {
-      console.error('Payment submission error:', error);
-      toast({
-        title: 'Payment Failed',
-        description: 'Failed to record payment. Please try again.',
-        variant: 'destructive',
-      });
+      ErrorHandler.handle(error, 'Fee Payment Submission');
     } finally {
       setIsLoading(false);
     }

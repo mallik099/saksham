@@ -6,28 +6,32 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { studentAdmissionAPI } from '@/services/api';
+import { admissionAPI } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, UserPlus } from 'lucide-react';
 
 interface FormData {
   fullName: string;
+  email: string;
   dateOfBirth: string;
-  gender: string;
   address: string;
-  courseApplied: string;
+  course: string;
   contactNumber: string;
   academicScore: string;
+  previousEducation: string;
 }
 
 export default function AdmissionForm() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
+    email: user?.email || '',
     dateOfBirth: '',
-    gender: '',
     address: '',
-    courseApplied: '',
+    course: '',
     contactNumber: '',
     academicScore: '',
+    previousEducation: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -47,10 +51,11 @@ export default function AdmissionForm() {
     const newErrors: Partial<FormData> = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
     if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-    if (!formData.gender) newErrors.gender = 'Gender is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.courseApplied) newErrors.courseApplied = 'Course selection is required';
+    if (!formData.course) newErrors.course = 'Course selection is required';
+    if (!formData.previousEducation.trim()) newErrors.previousEducation = 'Previous education is required';
     if (!formData.contactNumber.trim()) {
       newErrors.contactNumber = 'Contact number is required';
     } else if (!/^\d{10}$/.test(formData.contactNumber)) {
@@ -80,7 +85,10 @@ export default function AdmissionForm() {
 
     setIsLoading(true);
     try {
-      await studentAdmissionAPI.submit(formData);
+      await admissionAPI.submit({
+        ...formData,
+        academicScore: Number(formData.academicScore)
+      });
       toast({
         title: 'Application Submitted',
         description: 'Student admission application has been successfully submitted.',
@@ -88,12 +96,13 @@ export default function AdmissionForm() {
       // Reset form
       setFormData({
         fullName: '',
+        email: user?.email || '',
         dateOfBirth: '',
-        gender: '',
         address: '',
-        courseApplied: '',
+        course: '',
         contactNumber: '',
         academicScore: '',
+        previousEducation: '',
       });
     } catch (error) {
       console.error('Submission error:', error);
@@ -146,6 +155,23 @@ export default function AdmissionForm() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={errors.email ? 'border-destructive' : ''}
+                  disabled
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="dateOfBirth">Date of Birth *</Label>
                 <Input
                   id="dateOfBirth"
@@ -156,25 +182,6 @@ export default function AdmissionForm() {
                 />
                 {errors.dateOfBirth && (
                   <p className="text-sm text-destructive">{errors.dateOfBirth}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="gender">Gender *</Label>
-                <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                  <SelectTrigger className={errors.gender ? 'border-destructive' : ''}>
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.gender && (
-                  <p className="text-sm text-destructive">{errors.gender}</p>
                 )}
               </div>
 
@@ -209,11 +216,26 @@ export default function AdmissionForm() {
               )}
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="previousEducation">Previous Education *</Label>
+              <Input
+                id="previousEducation"
+                type="text"
+                value={formData.previousEducation}
+                onChange={(e) => handleInputChange('previousEducation', e.target.value)}
+                placeholder="e.g., 12th Grade, Diploma"
+                className={errors.previousEducation ? 'border-destructive' : ''}
+              />
+              {errors.previousEducation && (
+                <p className="text-sm text-destructive">{errors.previousEducation}</p>
+              )}
+            </div>
+
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="courseApplied">Course Applied *</Label>
-                <Select value={formData.courseApplied} onValueChange={(value) => handleInputChange('courseApplied', value)}>
-                  <SelectTrigger className={errors.courseApplied ? 'border-destructive' : ''}>
+                <Label htmlFor="course">Course Applied *</Label>
+                <Select value={formData.course} onValueChange={(value) => handleInputChange('course', value)}>
+                  <SelectTrigger className={errors.course ? 'border-destructive' : ''}>
                     <SelectValue placeholder="Select course" />
                   </SelectTrigger>
                   <SelectContent>
@@ -224,8 +246,8 @@ export default function AdmissionForm() {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.courseApplied && (
-                  <p className="text-sm text-destructive">{errors.courseApplied}</p>
+                {errors.course && (
+                  <p className="text-sm text-destructive">{errors.course}</p>
                 )}
               </div>
 

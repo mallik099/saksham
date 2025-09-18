@@ -1,129 +1,89 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
-export type UserRole = 'admin' | 'staff' | 'student';
-
-export interface User {
+interface User {
   id: string;
-  username: string;
-  email: string;
-  role: UserRole;
   name: string;
+  email: string;
+  role: string;
+  studentId?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  token: string | null;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
-  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for demonstration
-const MOCK_USERS: Array<User & { password: string }> = [
-  {
-    id: '1',
-    username: 'admin',
-    password: 'admin123',
-    email: 'admin@college.edu',
-    role: 'admin',
-    name: 'System Administrator'
-  },
-  {
-    id: '2',
-    username: 'staff',
-    password: 'staff123',
-    email: 'staff@college.edu',
-    role: 'staff',
-    name: 'College Staff'
-  },
-  {
-    id: '3',
-    username: 'student',
-    password: 'student123',
-    email: 'student@college.edu',
-    role: 'student',
-    name: 'John Student'
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-];
+  return context;
+};
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session on mount
-    const token = localStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData');
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
     
-    if (token && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
-      }
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     }
-    
     setIsLoading(false);
   }, []);
 
-  const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    setIsLoading(true);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const foundUser = MOCK_USERS.find(
-      u => u.username === username && u.password === password
-    );
-    
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      const mockToken = `jwt-token-${foundUser.id}-${Date.now()}`;
+  const login = async (email: string, password: string) => {
+    try {
+      // Mock authentication for demo
+      const mockUsers = {
+        'admin@example.com': { id: '1', name: 'Admin User', email: 'admin@example.com', role: 'admin' },
+        'faculty@example.com': { id: '2', name: 'Faculty User', email: 'faculty@example.com', role: 'faculty' },
+        'staff@example.com': { id: '3', name: 'Staff User', email: 'staff@example.com', role: 'staff' },
+        'student@example.com': { id: '4', name: 'John Doe', email: 'student@example.com', role: 'student', studentId: 'CS21001' }
+      };
       
-      // Store in localStorage
-      localStorage.setItem('authToken', mockToken);
-      localStorage.setItem('userData', JSON.stringify(userWithoutPassword));
+      const userData = mockUsers[email as keyof typeof mockUsers];
+      if (!userData) {
+        throw new Error('Invalid credentials');
+      }
       
-      setUser(userWithoutPassword);
-      setIsLoading(false);
+      const mockToken = 'mock-jwt-token-' + Date.now();
       
-      return { success: true };
-    } else {
-      setIsLoading(false);
-      return { success: false, error: 'Invalid username or password' };
+      setToken(mockToken);
+      setUser(userData);
+      
+      localStorage.setItem('token', mockToken);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${mockToken}`;
+    } catch (error) {
+      throw new Error('Invalid credentials');
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
     setUser(null);
-  };
-
-  const value = {
-    user,
-    login,
-    logout,
-    isLoading,
-    isAuthenticated: !!user
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+};

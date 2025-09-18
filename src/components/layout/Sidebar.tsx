@@ -29,31 +29,31 @@ const navItems = [
     title: 'Student Admission',
     href: '/admission',
     icon: UserPlus,
-    allowedRoles: ['admin', 'staff'] as UserRole[],
+    allowedRoles: ['staff'] as UserRole[],
   },
   {
     title: 'Fee Payment',
     href: '/fees',
     icon: CreditCard,
-    allowedRoles: ['admin', 'student'] as UserRole[],
+    allowedRoles: ['student'] as UserRole[],
   },
   {
     title: 'Hostel Allocation',
     href: '/hostel',
     icon: Building2,
-    allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
+    allowedRoles: ['staff'] as UserRole[],
   },
   {
-    title: 'Library',
+    title: 'Library Management',
     href: '/library',
     icon: BookOpen,
-    allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
+    allowedRoles: ['staff'] as UserRole[],
   },
   {
     title: 'Exam Registration',
     href: '/exam',
     icon: FileText,
-    allowedRoles: ['admin', 'staff', 'student'] as UserRole[],
+    allowedRoles: ['student', 'staff'] as UserRole[],
   },
 ];
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -26,11 +26,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Add timestamp to prevent caching
-    config.params = {
-      ...config.params,
-      _t: Date.now()
-    };
+
     
     return config;
   },
@@ -82,193 +78,149 @@ api.interceptors.response.use(
   }
 );
 
-// Student Admission API
-export const studentAdmissionAPI = {
+// Authentication API
+export const authAPI = {
+  login: async (credentials: { email: string; password: string }) => {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  },
+  register: async (userData: any) => {
+    const response = await api.post('/auth/register', userData);
+    return response.data;
+  },
+  getCurrentUser: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
+};
+
+// Dashboard API
+export const dashboardAPI = {
+  getStats: async () => {
+    const response = await api.get('/dashboard');
+    return response.data;
+  },
+  getAdmissionsChart: async () => {
+    const response = await api.get('/dashboard/admissions-chart');
+    return response.data;
+  },
+};
+
+// Admission API
+export const admissionAPI = {
   submit: async (data: any) => {
     const response = await api.post('/admissions', data);
     return response.data;
   },
-  getAll: async () => {
-    const response = await api.get('/admissions');
+  getMy: async () => {
+    const response = await api.get('/admissions/my');
+    return response.data;
+  },
+  getAll: async (params?: any) => {
+    const response = await api.get('/admissions', { params });
+    return response.data;
+  },
+  updateStatus: async (id: string, data: any) => {
+    const response = await api.patch(`/admissions/${id}/status`, data);
     return response.data;
   },
 };
 
-// Fee Payment API
+// Fee API
+export const feeAPI = {
+  getMy: async () => {
+    const response = await api.get('/fees/my');
+    return response.data;
+  },
+  pay: async (id: string, data: any) => {
+    const response = await api.post(`/fees/${id}/pay`, data);
+    return response.data;
+  },
+  getAll: async (params?: any) => {
+    const response = await api.get('/fees', { params });
+    return response.data;
+  },
+  create: async (data: any) => {
+    const response = await api.post('/fees', data);
+    return response.data;
+  },
+};
+
+// Exam API
+export const examAPI = {
+  register: async (data: any) => {
+    const response = await api.post('/exams', data);
+    return response.data;
+  },
+  getMy: async () => {
+    const response = await api.get('/exams/my');
+    return response.data;
+  },
+  cancel: async (id: string) => {
+    const response = await api.patch(`/exams/${id}/cancel`);
+    return response.data;
+  },
+  getAll: async (params?: any) => {
+    const response = await api.get('/exams', { params });
+    return response.data;
+  },
+};
+
+// User API
+export const userAPI = {
+  getProfile: async () => {
+    const response = await api.get('/users/profile');
+    return response.data;
+  },
+  updateProfile: async (data: any) => {
+    const response = await api.put('/users/profile', data);
+    return response.data;
+  },
+  getAll: async (params?: any) => {
+    const response = await api.get('/users', { params });
+    return response.data;
+  },
+  updateStatus: async (id: string, data: any) => {
+    const response = await api.patch(`/users/${id}/status`, data);
+    return response.data;
+  },
+};
+
+// Fee Payment API (legacy compatibility)
 export const feePaymentAPI = {
   submit: async (data: any) => {
-    const response = await api.post('/fee-payments', data);
-    return response.data;
+    return feeAPI.pay(data.feeId, data);
   },
   getStats: async () => {
-    const response = await api.get('/fee-payments/stats');
-    return response.data;
+    return feeAPI.getMy();
   },
 };
 
-// Hostel Allocation API
+// Hostel API (placeholder)
 export const hostelAPI = {
   submit: async (data: any) => {
-    const response = await api.post('/hostel-allocations', data);
+    const response = await api.post('/hostel', data);
     return response.data;
   },
   getOccupancy: async () => {
-    const response = await api.get('/hostel-allocations/occupancy');
+    const response = await api.get('/hostel/occupancy');
     return response.data;
   },
 };
 
-// Library API
+// Library API (placeholder)
 export const libraryAPI = {
   submit: async (data: any) => {
-    const response = await api.post('/library-transactions', data);
+    const response = await api.post('/library', data);
     return response.data;
   },
   getBorrowedCount: async () => {
-    const response = await api.get('/library-transactions/borrowed-count');
-    return response.data;
-  },
-};
-
-// Exam Registration API
-export const examAPI = {
-  submit: async (data: any) => {
-    const response = await api.post('/exam-registrations', data);
-    return response.data;
-  },
-  getRegistrationCount: async () => {
-    const response = await api.get('/exam-registrations/count');
-    return response.data;
-  },
-};
-
-// Dashboard API
-// Dashboard API
-export const dashboardAPI = {
-  getMetrics: async (role: string) => {
-    const response = await api.get(`/dashboard/metrics?role=${role}`);
-    return response.data;
-  },
-  getChartData: async (role: string) => {
-    const response = await api.get(`/dashboard/chart-data?role=${role}`);
-    return response.data;
-  },
-};
-
-// Authentication API
-export const authAPI = {
-  login: async (credentials: { username: string; password: string }) => {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
-  },
-  logout: async () => {
-    const response = await api.post('/auth/logout');
-    return response.data;
-  },
-  verifyToken: async () => {
-    const response = await api.get('/auth/verify');
-    return response.data;
-  },
-  refreshToken: async () => {
-    const response = await api.post('/auth/refresh');
-    return response.data;
-  },
-};
-
-// User Profile API
-export const profileAPI = {
-  get: async () => {
-    const response = await api.get('/profile');
-    return response.data;
-  },
-  update: async (data: any) => {
-    const response = await api.put('/profile', data);
-    return response.data;
-  },
-  uploadAvatar: async (file: File) => {
-    const formData = new FormData();
-    formData.append('avatar', file);
-    const response = await api.post('/profile/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  },
-};
-
-// Role-specific APIs
-export const studentAPI = {
-  getProfile: async () => {
-    const response = await api.get('/student/profile');
-    return response.data;
-  },
-  getDashboard: async () => {
-    const response = await api.get('/student/dashboard');
-    return response.data;
-  },
-  getFeeStatus: async () => {
-    const response = await api.get('/student/fees');
-    return response.data;
-  },
-  getHostelInfo: async () => {
-    const response = await api.get('/student/hostel');
-    return response.data;
-  },
-  getLibraryBooks: async () => {
-    const response = await api.get('/student/library');
-    return response.data;
-  },
-  getExamRegistrations: async () => {
-    const response = await api.get('/student/exams');
-    return response.data;
-  },
-};
-
-export const staffAPI = {
-  getDashboard: async () => {
-    const response = await api.get('/staff/dashboard');
-    return response.data;
-  },
-  manageHostel: async () => {
-    const response = await api.get('/staff/hostel/manage');
-    return response.data;
-  },
-  manageLibrary: async () => {
-    const response = await api.get('/staff/library/manage');
-    return response.data;
-  },
-  manageExams: async () => {
-    const response = await api.get('/staff/exams/manage');
-    return response.data;
-  },
-};
-
-export const adminAPI = {
-  getDashboard: async () => {
-    const response = await api.get('/admin/dashboard');
-    return response.data;
-  },
-  getAllUsers: async () => {
-    const response = await api.get('/admin/users');
-    return response.data;
-  },
-  createUser: async (userData: any) => {
-    const response = await api.post('/admin/users', userData);
-    return response.data;
-  },
-  updateUser: async (userId: string, userData: any) => {
-    const response = await api.put(`/admin/users/${userId}`, userData);
-    return response.data;
-  },
-  deleteUser: async (userId: string) => {
-    const response = await api.delete(`/admin/users/${userId}`);
-    return response.data;
-  },
-  getSystemMetrics: async () => {
-    const response = await api.get('/admin/metrics');
+    const response = await api.get('/library/borrowed-count');
     return response.data;
   },
 };
 
 export default api;
+
+// Legacy exports for backward compatibility
+export const studentAdmissionAPI = admissionAPI;

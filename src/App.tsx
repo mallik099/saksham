@@ -1,61 +1,77 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { Layout } from "./components/layout/Layout";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
-import AdmissionForm from "./pages/AdmissionForm";
-import FeePayment from "./pages/FeePayment";
-import HostelAllocation from "./pages/HostelAllocation";
-import LibraryManagement from "./pages/LibraryManagement";
-import ExamRegistration from "./pages/ExamRegistration";
-import NotFound from "./pages/NotFound";
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'sonner'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
+import StudentDashboard from './pages/StudentDashboard'
+import FacultyDashboard from './pages/FacultyDashboard'
+import StaffDashboard from './pages/StaffDashboard'
 
-const queryClient = new QueryClient();
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+};
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const DashboardRouter: React.FC = () => {
+  const { user } = useAuth();
+  
+  if (user?.role === 'student') {
+    return <StudentDashboard />;
+  }
+  
+  if (user?.role === 'faculty') {
+    return <FacultyDashboard />;
+  }
+  
+  if (user?.role === 'staff') {
+    return <StaffDashboard />;
+  }
+  
+  return <Dashboard />;
+};
+
+function App() {
+  return (
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+      <Router>
+        <div className="App">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/*" element={
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardRouter />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/student" element={
               <ProtectedRoute>
-                <Layout>
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/admission" element={
-                      <ProtectedRoute allowedRoles={['admin', 'staff']}>
-                        <AdmissionForm />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/fees" element={
-                      <ProtectedRoute allowedRoles={['admin', 'student']}>
-                        <FeePayment />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/hostel" element={<HostelAllocation />} />
-                    <Route path="/library" element={<LibraryManagement />} />
-                    <Route path="/exam" element={<ExamRegistration />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Layout>
+                <StudentDashboard />
               </ProtectedRoute>
             } />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+          <Toaster position="top-right" />
+        </div>
+      </Router>
     </AuthProvider>
-  </QueryClientProvider>
-);
+  )
+}
 
-export default App;
+export default App
