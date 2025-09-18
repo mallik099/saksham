@@ -4,30 +4,30 @@ const bcrypt = require('bcryptjs');
 const users = [
   {
     id: '1',
-    name: 'Admin User',
-    email: 'admin@example.com',
-    password: bcrypt.hashSync('Admin@123', 10),
+    name: 'Dr. Rajesh Kumar',
+    email: 'admin@saksham.edu',
+    password: bcrypt.hashSync('admin123', 10),
     role: 'admin'
   },
   {
     id: '2',
-    name: 'Faculty User',
-    email: 'faculty@example.com',
-    password: bcrypt.hashSync('Faculty@123', 10),
+    name: 'Prof. Priya Sharma',
+    email: 'faculty@saksham.edu',
+    password: bcrypt.hashSync('faculty123', 10),
     role: 'faculty'
   },
   {
     id: '3',
-    name: 'Staff User',
-    email: 'staff@example.com',
-    password: bcrypt.hashSync('Staff@123', 10),
+    name: 'Suresh Gupta',
+    email: 'staff@saksham.edu',
+    password: bcrypt.hashSync('staff123', 10),
     role: 'staff'
   },
   {
     id: '4',
-    name: 'Student User',
-    email: 'student@example.com',
-    password: bcrypt.hashSync('Student@123', 10),
+    name: 'Arjun Patel',
+    email: 'student@saksham.edu',
+    password: bcrypt.hashSync('student123', 10),
     role: 'student',
     studentId: 'STU001'
   }
@@ -37,27 +37,29 @@ const users = [
 const students = [
   {
     id: 'STU001',
-    name: 'John Doe',
-    email: 'student@example.com',
+    name: 'Arjun Patel',
+    email: 'arjun.patel@saksham.edu',
     phone: '+91-9876543210',
-    course: 'Computer Science',
-    semester: 3,
-    admissionDate: '2023-08-15',
+    course: 'Computer Science Engineering',
+    semester: 6,
+    admissionDate: '2021-08-15',
     hostelRoom: 'A-101',
-    busRoute: 'Route-1',
-    status: 'active'
+    busRoute: 'Whitefield-Electronic City',
+    status: 'active',
+    address: 'Koramangala, Bangalore, Karnataka - 560034'
   },
   {
     id: 'STU002',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
+    name: 'Kavya Reddy',
+    email: 'kavya.reddy@saksham.edu',
     phone: '+91-9876543211',
-    course: 'Electronics',
-    semester: 2,
-    admissionDate: '2024-01-10',
+    course: 'Electronics & Communication',
+    semester: 4,
+    admissionDate: '2022-08-10',
     hostelRoom: 'B-205',
-    busRoute: 'Route-2',
-    status: 'active'
+    busRoute: 'Marathahalli-Sarjapur',
+    status: 'active',
+    address: 'Jayanagar, Bangalore, Karnataka - 560011'
   }
 ];
 

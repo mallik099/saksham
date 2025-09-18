@@ -11,7 +11,7 @@ const FacultyIdCard: React.FC<FacultyIdCardProps> = ({ facultyData }) => {
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = '#';
-    link.download = `${facultyData.employeeId}_faculty_id.pdf`;
+    link.download = `${facultyData.facultyId}_faculty_id.pdf`;
     link.click();
   };
 
@@ -40,7 +40,7 @@ const FacultyIdCard: React.FC<FacultyIdCardProps> = ({ facultyData }) => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-green-200">Employee ID:</span>
-                <span className="font-semibold">{facultyData.employeeId}</span>
+                <span className="font-semibold">{facultyData.facultyId}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-green-200">Department:</span>
@@ -63,7 +63,7 @@ const FacultyIdCard: React.FC<FacultyIdCardProps> = ({ facultyData }) => {
             {/* Barcode */}
             <div className="mt-4 p-2 bg-white rounded">
               <div className="h-8 bg-black bg-opacity-80 flex items-center justify-center">
-                <span className="text-white text-xs font-mono">{facultyData.employeeId}</span>
+                <span className="text-white text-xs font-mono">{facultyData.facultyId}</span>
               </div>
             </div>
           </div>

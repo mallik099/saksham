@@ -1,0 +1,12 @@
+export { default as StaffProfile } from './StaffProfile';
+export { default as TaskManagement } from './TaskManagement';
+export { default as StaffAttendance } from './StaffAttendance';
+export { default as FeeManagement } from './FeeManagement';
+export { default as HostelManagement } from './HostelManagement';
+export { default as LibraryManagement } from './LibraryManagement';
+export { default as StaffTransport } from './StaffTransport';
+export { default as StaffLibrary } from './StaffLibrary';
+export { default as StaffHostel } from './StaffHostel';
+export { default as EnhancedTransportManagement } from './EnhancedTransportManagement';
+export { default as EnhancedLibraryManagement } from './EnhancedLibraryManagement';
+export { default as EnhancedHostelManagement } from './EnhancedHostelManagement';

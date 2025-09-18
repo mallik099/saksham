@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface StudentTimetableProps {
@@ -6,6 +6,8 @@ interface StudentTimetableProps {
 }
 
 const StudentTimetable: React.FC<StudentTimetableProps> = ({ studentData }) => {
+  const [viewMode, setViewMode] = useState('week');
+  const [selectedDay, setSelectedDay] = useState('monday');
   const timetable = {
     'Monday': [
       { time: '9:00-10:00', subject: 'Data Structures', room: 'CS-101', faculty: 'Dr. Smith' },

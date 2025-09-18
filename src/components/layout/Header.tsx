@@ -1,97 +1,88 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { LogOut, User, Settings } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Bell, Search, User, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
-export function Header() {
-  const { user, logout } = useAuth();
-  const { toast } = useToast();
+interface HeaderProps {
+  userRole: 'admin' | 'faculty' | 'student' | 'parent';
+  onRoleChange: (role: 'admin' | 'faculty' | 'student' | 'parent') => void;
+}
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
-  };
+const roleColors = {
+  admin: 'from-red-500 to-pink-600',
+  faculty: 'from-green-500 to-emerald-600',
+  student: 'from-blue-500 to-cyan-600',
+  parent: 'from-purple-500 to-violet-600',
+};
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
+const roleLabels = {
+  admin: 'Administrator',
+  faculty: 'Faculty Member',
+  student: 'Student',
+  parent: 'Parent',
+};
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return 'bg-destructive text-destructive-foreground';
-      case 'staff':
-        return 'bg-warning text-warning-foreground';
-      case 'student':
-        return 'bg-success text-success-foreground';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
-  };
-
-  if (!user) return null;
+export default function Header({ userRole, onRoleChange }: HeaderProps) {
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
   return (
-    <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-      <div className="flex h-16 items-center justify-between px-6">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-lg font-semibold text-foreground">
-            Welcome back, {user.name}
-          </h2>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
-            {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-          </span>
+    <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="flex items-center justify-between">
+        {/* Search */}
+        <div className="flex-1 max-w-md">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-              <Avatar className="h-10 w-10">
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <div className="flex items-center justify-start gap-2 p-2">
-              <div className="flex flex-col space-y-1 leading-none">
-                <p className="font-medium">{user.name}</p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
+        {/* Right side */}
+        <div className="flex items-center space-x-4">
+          {/* Role Selector */}
+          <div className="relative">
+            <button
+              onClick={() => setShowRoleDropdown(!showRoleDropdown)}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r ${roleColors[userRole]} text-white shadow-lg hover:shadow-xl transition-all duration-200`}
+            >
+              <span className="font-medium">{roleLabels[userRole]}</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+            
+            {showRoleDropdown && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                {Object.entries(roleLabels).map(([role, label]) => (
+                  <button
+                    key={role}
+                    onClick={() => {
+                      onRoleChange(role as any);
+                      setShowRoleDropdown(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${
+                      role === userRole ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
+            )}
+          </div>
+
+          {/* Notifications */}
+          <button className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+            <Bell className="w-5 h-5" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+          </button>
+
+          {/* Profile */}
+          <button className="flex items-center space-x-2 p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+            <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
             </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem disabled>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem disabled>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </button>
+        </div>
       </div>
     </header>
   );

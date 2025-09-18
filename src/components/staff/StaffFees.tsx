@@ -105,42 +105,56 @@ const StaffFees = () => {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
+    <div className="space-y-6 theme-staff">
+      {/* Enhanced Header */}
+      <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-2xl p-6 text-white">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-3xl font-bold mb-2">Fee Management System</h2>
+            <p className="text-pink-100">Streamlined fee collection and payment processing</p>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-bold">₹{payments.reduce((sum, p) => sum + p.amount, 0).toLocaleString()}</div>
+            <div className="text-pink-100 text-sm">Today's Collection</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Enhanced Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-green-50">
+        <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold">
                 ₹{payments.reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Total Collected</p>
+              <p className="text-sm text-green-100">Total Collected</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-orange-50">
+        <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-orange-600">
+              <p className="text-2xl font-bold">
                 ₹{pendingPayments.reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Pending Collection</p>
+              <p className="text-sm text-orange-100">Pending Collection</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-blue-50">
+        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{payments.length}</p>
-              <p className="text-sm text-gray-600">Payments Today</p>
+              <p className="text-2xl font-bold">{payments.length}</p>
+              <p className="text-sm text-blue-100">Payments Today</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-purple-50">
+        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600">{pendingPayments.length}</p>
-              <p className="text-sm text-gray-600">Pending Students</p>
+              <p className="text-2xl font-bold">{pendingPayments.length}</p>
+              <p className="text-sm text-purple-100">Pending Students</p>
             </div>
           </CardContent>
         </Card>

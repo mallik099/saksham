@@ -86,8 +86,8 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
   return (
     <div className="space-y-6">
       {/* Library Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-r from-blue-400 to-blue-500 text-white">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -99,7 +99,7 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <Card className="bg-gradient-to-r from-green-400 to-green-500 text-white">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -111,7 +111,7 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <Card className="bg-gradient-to-r from-orange-400 to-orange-500 text-white">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -124,7 +124,42 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
             </div>
           </CardContent>
         </Card>
+
+        <Card className="bg-gradient-to-r from-purple-400 to-purple-500 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm">Reading Hours</p>
+                <p className="text-2xl font-bold">24</p>
+              </div>
+              <BookOpen className="h-8 w-8 text-purple-200" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-blue-800">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button className="bg-blue-600 hover:bg-blue-700 p-6 h-auto flex-col">
+              <BookOpen className="h-8 w-8 mb-2" />
+              <span>Reserve Book</span>
+            </Button>
+            <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50 p-6 h-auto flex-col">
+              <Search className="h-8 w-8 mb-2" />
+              <span>Search Catalog</span>
+            </Button>
+            <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50 p-6 h-auto flex-col">
+              <Calendar className="h-8 w-8 mb-2" />
+              <span>Renew Books</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Currently Issued Books */}
       <Card>
@@ -139,27 +174,37 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
             {issuedBooks.map((book) => {
               const daysUntilDue = getDaysUntilDue(book.dueDate);
               return (
-                <div key={book.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={book.id} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <div>
-                    <h4 className="font-medium">{book.title}</h4>
-                    <p className="text-sm text-gray-600">by {book.author}</p>
-                    <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
+                    <h4 className="font-medium text-blue-800">{book.title}</h4>
+                    <p className="text-sm text-blue-600">by {book.author}</p>
+                    <p className="text-xs text-blue-500">ISBN: {book.isbn}</p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm">Due: {book.dueDate}</span>
+                      <Calendar className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm text-blue-600">Due: {book.dueDate}</span>
                       {daysUntilDue <= 3 && (
-                        <Badge variant="destructive" className="text-xs">
+                        <Badge className="bg-red-100 text-red-800 text-xs">
                           Due in {daysUntilDue} days
                         </Badge>
                       )}
                     </div>
                   </div>
-                  <Button 
-                    onClick={() => handleReturnBook(book.id)}
-                    variant="outline"
-                  >
-                    Return Book
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm"
+                      variant="outline"
+                      className="border-blue-300 text-blue-600 hover:bg-blue-100"
+                    >
+                      Renew
+                    </Button>
+                    <Button 
+                      onClick={() => handleReturnBook(book.id)}
+                      className="bg-blue-600 hover:bg-blue-700"
+                      size="sm"
+                    >
+                      Return
+                    </Button>
+                  </div>
                 </div>
               );
             })}
@@ -186,21 +231,32 @@ const StudentLibrary: React.FC<StudentLibraryProps> = ({ studentData }) => {
           </div>
           <div className="space-y-4">
             {filteredBooks.map((book) => (
-              <div key={book.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={book.id} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div>
-                  <h4 className="font-medium">{book.title}</h4>
-                  <p className="text-sm text-gray-600">by {book.author}</p>
-                  <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
-                  <Badge variant="secondary" className="mt-2">
+                  <h4 className="font-medium text-blue-800">{book.title}</h4>
+                  <p className="text-sm text-blue-600">by {book.author}</p>
+                  <p className="text-xs text-blue-500">ISBN: {book.isbn}</p>
+                  <Badge className={book.available > 0 ? 'bg-green-100 text-green-800 mt-2' : 'bg-red-100 text-red-800 mt-2'}>
                     {book.available} copies available
                   </Badge>
                 </div>
-                <Button 
-                  onClick={() => handleIssueBook(book.id)}
-                  disabled={book.available === 0}
-                >
-                  {book.available > 0 ? 'Issue Book' : 'Not Available'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    className="border-blue-300 text-blue-600 hover:bg-blue-100"
+                  >
+                    Preview
+                  </Button>
+                  <Button 
+                    onClick={() => handleIssueBook(book.id)}
+                    disabled={book.available === 0}
+                    className="bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                  >
+                    {book.available > 0 ? 'Issue' : 'Unavailable'}
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

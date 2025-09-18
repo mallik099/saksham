@@ -140,46 +140,60 @@ const StaffHostel = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
+    <div className="space-y-6 theme-staff">
+      {/* Enhanced Header */}
+      <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-2xl p-6 text-white">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-3xl font-bold mb-2">Hostel Management System</h2>
+            <p className="text-pink-100">Comprehensive hostel operations and room management</p>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-bold">{Math.round((hostelBlocks.reduce((sum, block) => sum + block.occupiedRooms, 0) / hostelBlocks.reduce((sum, block) => sum + block.totalRooms, 0)) * 100)}%</div>
+            <div className="text-pink-100 text-sm">Occupancy Rate</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Enhanced Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-blue-50">
+        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold">
                 {hostelBlocks.reduce((sum, block) => sum + block.totalRooms, 0)}
               </p>
-              <p className="text-sm text-gray-600">Total Rooms</p>
+              <p className="text-sm text-blue-100">Total Rooms</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-green-50">
+        <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold">
                 {hostelBlocks.reduce((sum, block) => sum + block.occupiedRooms, 0)}
               </p>
-              <p className="text-sm text-gray-600">Occupied Rooms</p>
+              <p className="text-sm text-green-100">Occupied Rooms</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-orange-50">
+        <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-orange-600">
+              <p className="text-2xl font-bold">
                 {hostelBlocks.reduce((sum, block) => sum + (block.totalRooms - block.occupiedRooms), 0)}
               </p>
-              <p className="text-sm text-gray-600">Available Rooms</p>
+              <p className="text-sm text-orange-100">Available Rooms</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-purple-50">
+        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600">
-                {Math.round((hostelBlocks.reduce((sum, block) => sum + block.occupiedRooms, 0) / hostelBlocks.reduce((sum, block) => sum + block.totalRooms, 0)) * 100)}%
+              <p className="text-2xl font-bold">
+                {requests.filter(r => r.status === 'Pending').length}
               </p>
-              <p className="text-sm text-gray-600">Occupancy Rate</p>
+              <p className="text-sm text-purple-100">Pending Requests</p>
             </div>
           </CardContent>
         </Card>

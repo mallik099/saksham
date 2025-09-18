@@ -2,11 +2,12 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import StudentDashboard from './pages/StudentDashboard'
-import FacultyDashboard from './pages/FacultyDashboard'
-import StaffDashboard from './pages/StaffDashboard'
+import ModernLogin from './pages/ModernLogin'
+import ModernAdminDashboard from './pages/ModernAdminDashboard'
+import ComprehensiveStudentDashboard from './pages/ComprehensiveStudentDashboard'
+import ModernStaffDashboard from './pages/ModernStaffDashboard'
+import ModernParentDashboard from './pages/ModernParentDashboard'
+import ModernFacultyDashboard from './pages/ModernFacultyDashboard'
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -28,20 +29,26 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const DashboardRouter: React.FC = () => {
   const { user } = useAuth();
-  
-  if (user?.role === 'student') {
-    return <StudentDashboard />;
-  }
-  
-  if (user?.role === 'faculty') {
-    return <FacultyDashboard />;
-  }
-  
-  if (user?.role === 'staff') {
-    return <StaffDashboard />;
-  }
-  
-  return <Dashboard />;
+
+  React.useEffect(() => {
+    const el = document.documentElement;
+    const roles = ['admin', 'student', 'faculty', 'staff', 'parent'];
+    roles.forEach(r => el.classList.remove(`theme-${r}`));
+    if (user?.role && roles.includes(user.role)) {
+      el.classList.add(`theme-${user.role}`);
+    }
+    return () => {
+      roles.forEach(r => el.classList.remove(`theme-${r}`));
+    };
+  }, [user?.role]);
+
+  if (user?.role === 'admin') return <ModernAdminDashboard />;
+  if (user?.role === 'student') return <ComprehensiveStudentDashboard />;
+  if (user?.role === 'faculty') return <ModernFacultyDashboard />;
+  if (user?.role === 'staff') return <ModernStaffDashboard />;
+  if (user?.role === 'parent') return <ModernParentDashboard />;
+
+  return <Navigate to="/login" replace />;
 };
 
 function App() {
@@ -50,7 +57,7 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<ModernLogin />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route
               path="/dashboard"
@@ -61,11 +68,7 @@ function App() {
               }
             />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/student" element={
-              <ProtectedRoute>
-                <StudentDashboard />
-              </ProtectedRoute>
-            } />
+
           </Routes>
           <Toaster position="top-right" />
         </div>

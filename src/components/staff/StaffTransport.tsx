@@ -4,51 +4,99 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Bus, Users, MapPin, Download, Plus } from 'lucide-react';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Bus, Users, MapPin, Download, Plus, Clock, AlertTriangle, CheckCircle, Navigation, Fuel, Wrench, Calendar } from 'lucide-react';
 
 const StaffTransport = () => {
   const busRoutes = [
     {
       id: 'RT001',
-      routeName: 'Route 1 - City Center',
+      routeName: 'Route 1 - City Center Express',
       driver: 'Rajesh Kumar',
+      driverPhone: '+91 9876543210',
       busNumber: 'KA-01-AB-1234',
       capacity: 50,
-      currentOccupancy: 35,
-      stops: ['City Center', 'Mall Road', 'Railway Station', 'College'],
+      currentOccupancy: 42,
+      stops: ['City Center', 'Mall Road', 'Railway Station', 'Tech Hub', 'College'],
       fee: 2000,
+      timing: { departure: '7:30 AM', arrival: '8:45 AM' },
+      status: 'Active',
+      fuelEfficiency: '12 km/l',
+      lastMaintenance: '2024-02-15',
+      nextMaintenance: '2024-04-15',
       students: [
-        { rollNo: 'CS21001', name: 'John Doe', stop: 'City Center', feeStatus: 'Paid' },
-        { rollNo: 'CS21002', name: 'Jane Smith', stop: 'Mall Road', feeStatus: 'Pending' },
-        { rollNo: 'EC21003', name: 'Mike Johnson', stop: 'Railway Station', feeStatus: 'Paid' }
+        { rollNo: 'CS21001', name: 'John Doe', stop: 'City Center', feeStatus: 'Paid', phone: '+91 9876543211' },
+        { rollNo: 'CS21002', name: 'Jane Smith', stop: 'Mall Road', feeStatus: 'Pending', phone: '+91 9876543212' },
+        { rollNo: 'EC21003', name: 'Mike Johnson', stop: 'Railway Station', feeStatus: 'Paid', phone: '+91 9876543213' },
+        { rollNo: 'ME21004', name: 'Sarah Wilson', stop: 'Tech Hub', feeStatus: 'Paid', phone: '+91 9876543214' },
+        { rollNo: 'CS21005', name: 'David Brown', stop: 'City Center', feeStatus: 'Overdue', phone: '+91 9876543215' }
       ]
     },
     {
       id: 'RT002',
-      routeName: 'Route 2 - Suburb Area',
+      routeName: 'Route 2 - Suburb Connect',
       driver: 'Suresh Patel',
+      driverPhone: '+91 9876543220',
       busNumber: 'KA-01-CD-5678',
       capacity: 45,
-      currentOccupancy: 28,
-      stops: ['Suburb Area', 'Market Square', 'Bus Stand', 'College'],
+      currentOccupancy: 38,
+      stops: ['Suburb Area', 'Market Square', 'Bus Stand', 'Shopping Mall', 'College'],
       fee: 1800,
+      timing: { departure: '7:45 AM', arrival: '9:00 AM' },
+      status: 'Active',
+      fuelEfficiency: '10 km/l',
+      lastMaintenance: '2024-02-20',
+      nextMaintenance: '2024-04-20',
       students: [
-        { rollNo: 'ME21004', name: 'Sarah Wilson', stop: 'Suburb Area', feeStatus: 'Paid' },
-        { rollNo: 'CS21005', name: 'David Brown', stop: 'Market Square', feeStatus: 'Paid' }
+        { rollNo: 'ME21006', name: 'Lisa Davis', stop: 'Suburb Area', feeStatus: 'Paid', phone: '+91 9876543216' },
+        { rollNo: 'EC21007', name: 'Tom Wilson', stop: 'Market Square', feeStatus: 'Paid', phone: '+91 9876543217' },
+        { rollNo: 'CS21008', name: 'Emma Brown', stop: 'Bus Stand', feeStatus: 'Pending', phone: '+91 9876543218' },
+        { rollNo: 'ME21009', name: 'Alex Johnson', stop: 'Shopping Mall', feeStatus: 'Paid', phone: '+91 9876543219' }
       ]
     },
     {
       id: 'RT003',
-      routeName: 'Route 3 - Industrial Area',
+      routeName: 'Route 3 - Industrial Corridor',
       driver: 'Amit Singh',
+      driverPhone: '+91 9876543230',
       busNumber: 'KA-01-EF-9012',
       capacity: 40,
-      currentOccupancy: 22,
-      stops: ['Industrial Area', 'Tech Park', 'Hospital', 'College'],
+      currentOccupancy: 35,
+      stops: ['Industrial Area', 'Tech Park', 'Hospital', 'Metro Station', 'College'],
       fee: 2200,
+      timing: { departure: '8:00 AM', arrival: '9:15 AM' },
+      status: 'Maintenance',
+      fuelEfficiency: '11 km/l',
+      lastMaintenance: '2024-03-01',
+      nextMaintenance: '2024-05-01',
       students: [
-        { rollNo: 'EC21006', name: 'Lisa Davis', stop: 'Industrial Area', feeStatus: 'Pending' },
-        { rollNo: 'ME21007', name: 'Tom Wilson', stop: 'Tech Park', feeStatus: 'Paid' }
+        { rollNo: 'EC21010', name: 'Ryan Davis', stop: 'Industrial Area', feeStatus: 'Paid', phone: '+91 9876543221' },
+        { rollNo: 'CS21011', name: 'Sophie Miller', stop: 'Tech Park', feeStatus: 'Pending', phone: '+91 9876543222' },
+        { rollNo: 'ME21012', name: 'James Wilson', stop: 'Hospital', feeStatus: 'Paid', phone: '+91 9876543223' },
+        { rollNo: 'EC21013', name: 'Olivia Brown', stop: 'Metro Station', feeStatus: 'Overdue', phone: '+91 9876543224' }
+      ]
+    },
+    {
+      id: 'RT004',
+      routeName: 'Route 4 - North Campus',
+      driver: 'Vikram Sharma',
+      driverPhone: '+91 9876543240',
+      busNumber: 'KA-01-GH-3456',
+      capacity: 55,
+      currentOccupancy: 48,
+      stops: ['North Gate', 'University Road', 'Library Square', 'Sports Complex', 'College'],
+      fee: 1900,
+      timing: { departure: '7:15 AM', arrival: '8:30 AM' },
+      status: 'Active',
+      fuelEfficiency: '13 km/l',
+      lastMaintenance: '2024-02-25',
+      nextMaintenance: '2024-04-25',
+      students: [
+        { rollNo: 'CS21014', name: 'Noah Johnson', stop: 'North Gate', feeStatus: 'Paid', phone: '+91 9876543225' },
+        { rollNo: 'ME21015', name: 'Ava Davis', stop: 'University Road', feeStatus: 'Paid', phone: '+91 9876543226' },
+        { rollNo: 'EC21016', name: 'Liam Wilson', stop: 'Library Square', feeStatus: 'Pending', phone: '+91 9876543227' },
+        { rollNo: 'CS21017', name: 'Mia Brown', stop: 'Sports Complex', feeStatus: 'Paid', phone: '+91 9876543228' }
       ]
     }
   ];

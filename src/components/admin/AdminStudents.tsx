@@ -14,10 +14,6 @@ const AdminStudents = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Student Management</h2>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Student
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

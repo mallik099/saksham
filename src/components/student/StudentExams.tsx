@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -9,6 +9,17 @@ interface StudentExamsProps {
 }
 
 const StudentExams: React.FC<StudentExamsProps> = ({ studentData }) => {
+  const [selectedExam, setSelectedExam] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  if (isLoading) {
+    return <div className="animate-pulse bg-gray-200 h-40 rounded-lg"></div>;
+  }
   const upcomingExams = [
     {
       subject: 'Data Structures',
@@ -94,17 +105,27 @@ const StudentExams: React.FC<StudentExamsProps> = ({ studentData }) => {
             {upcomingExams.map((exam, index) => (
               <div key={index} className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-bold text-lg">{exam.subject}</h4>
-                  <Badge variant="secondary">{exam.type}</Badge>
+                  <h4 className="font-bold text-lg text-blue-800">{exam.subject}</h4>
+                  <Badge className="bg-blue-600 text-white">{exam.type}</Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <p><strong>Date:</strong> {exam.date}</p>
-                    <p><strong>Time:</strong> {exam.time}</p>
+                    <p className="text-blue-700"><strong>Date:</strong> {exam.date}</p>
+                    <p className="text-blue-700"><strong>Time:</strong> {exam.time}</p>
                   </div>
                   <div>
-                    <p><strong>Room:</strong> {exam.room}</p>
-                    <p><strong>Syllabus:</strong> {exam.syllabus}</p>
+                    <p className="text-blue-700"><strong>Room:</strong> {exam.room}</p>
+                    <p className="text-blue-700"><strong>Syllabus:</strong> {exam.syllabus}</p>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      <Download className="h-3 w-3 mr-1" />
+                      Admit Card
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-blue-300 text-blue-600">
+                      <FileText className="h-3 w-3 mr-1" />
+                      Syllabus
+                    </Button>
                   </div>
                 </div>
               </div>

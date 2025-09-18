@@ -5,13 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { 
   Home, User, ClipboardList, GraduationCap, Upload, 
-  MessageSquare, LogOut, Bell, Calendar, IdCard, Clock, Bus
+  MessageSquare, LogOut, Bell, Calendar, IdCard, Clock, Bus, FileText
 } from 'lucide-react';
 import FacultyProfile from '../components/faculty/FacultyProfile';
 import FacultyAttendance from '../components/faculty/FacultyAttendance';
 import FacultyExams from '../components/faculty/FacultyExams';
 import FacultyIdCard from '../components/faculty/FacultyIdCard';
 import FacultyTimetable from '../components/faculty/FacultyTimetable';
+import AcademicCalendar from '../components/modules/AcademicCalendar';
+import LeaveApplication from '../components/modules/LeaveApplication';
+import FeedbackSystem from '../components/modules/FeedbackSystem';
+import DocumentVault from '../components/modules/DocumentVault';
 
 const FacultyDashboard = () => {
   const { user, logout } = useAuth();
@@ -57,7 +61,11 @@ const FacultyDashboard = () => {
     { id: 'timetable', label: 'Timetable', icon: Clock },
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'attendance', label: 'Attendance', icon: ClipboardList },
-    { id: 'exams', label: 'Exams & Marks', icon: GraduationCap }
+    { id: 'exams', label: 'Exams & Marks', icon: GraduationCap },
+    { id: 'calendar', label: 'Academic Calendar', icon: Calendar },
+    { id: 'leaves', label: 'Leave Applications', icon: ClipboardList },
+    { id: 'feedback', label: 'Feedback', icon: MessageSquare },
+    { id: 'documents', label: 'Documents', icon: FileText }
   ];
 
   const DashboardOverview = () => (
@@ -130,7 +138,7 @@ const FacultyDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
@@ -159,7 +167,7 @@ const FacultyDashboard = () => {
       </div>
 
       {/* Today's Classes */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
@@ -185,7 +193,7 @@ const FacultyDashboard = () => {
       </Card>
 
       {/* Pending Tasks */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
@@ -208,7 +216,7 @@ const FacultyDashboard = () => {
       </Card>
 
       {/* Notifications */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
@@ -241,16 +249,20 @@ const FacultyDashboard = () => {
       case 'profile': return <FacultyProfile facultyData={facultyData} />;
       case 'attendance': return <FacultyAttendance facultyData={facultyData} />;
       case 'exams': return <FacultyExams facultyData={facultyData} />;
+      case 'calendar': return <AcademicCalendar />;
+      case 'leaves': return <LeaveApplication isAdmin={false} studentId={facultyData.employeeId} />;
+      case 'feedback': return <FeedbackSystem isAdmin={false} userType="Faculty" />;
+      case 'documents': return <DocumentVault isAdmin={false} />;
       default: return <DashboardOverview />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
+      <div className="w-72 glass-sidebar rounded-r-3xl">
         <div className="p-6 border-b">
-          <h1 className="text-xl font-bold text-gray-800">CampusFlow</h1>
+          <h1 className="text-xl font-bold text-gray-800">Saksham ERP</h1>
           <p className="text-sm text-gray-600">Faculty Portal</p>
         </div>
         
@@ -261,8 +273,8 @@ const FacultyDashboard = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-gray-100 transition-colors ${
-                  activeTab === item.id ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-700'
+                className={`w-full flex items-center gap-3 px-6 py-3 text-left transition-colors rounded-xl mx-2 my-1 ${
+                  activeTab === item.id ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -272,7 +284,7 @@ const FacultyDashboard = () => {
           })}
         </nav>
 
-        <div className="absolute bottom-0 w-64 p-6 border-t">
+        <div className="absolute bottom-0 w-72 p-6 border-t border-white/40">
           <Button onClick={logout} variant="outline" className="w-full">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
@@ -282,7 +294,7 @@ const FacultyDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1">
-        <header className="bg-white shadow-sm border-b">
+        <header className="glass-header">
           <div className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -299,7 +311,7 @@ const FacultyDashboard = () => {
           </div>
         </header>
 
-        <main className="p-6">
+        <main className="p-6 space-y-6">
           {renderContent()}
         </main>
       </div>

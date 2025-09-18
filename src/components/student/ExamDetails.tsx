@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,8 @@ const mockExams: ExamRegistration[] = [
 ];
 
 export function ExamDetails() {
+  const [selectedSemester, setSelectedSemester] = useState('current');
+  const [viewMode, setViewMode] = useState('upcoming');
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'registered': return 'bg-green-100 text-green-800';

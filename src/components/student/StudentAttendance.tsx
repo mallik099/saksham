@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -14,6 +14,16 @@ interface StudentAttendanceProps {
 
 const StudentAttendance: React.FC<StudentAttendanceProps> = ({ studentData }) => {
   const [selectedSubject, setSelectedSubject] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  if (isLoading) {
+    return <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>;
+  }
 
   const attendanceData = [
     { subject: 'Data Structures', present: 28, total: 32, percentage: 87.5 },
@@ -96,36 +106,66 @@ const StudentAttendance: React.FC<StudentAttendanceProps> = ({ studentData }) =>
   return (
     <div className="space-y-6">
       {/* Overall Attendance */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <ClipboardList className="h-5 w-5" />
               Overall Attendance
-            </span>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Apply for Leave
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Leave Application</DialogTitle>
-                </DialogHeader>
-                <LeaveApplicationForm />
-              </DialogContent>
-            </Dialog>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center mb-6">
-            <div className="text-4xl font-bold text-blue-600">{studentData.attendance}%</div>
-            <p className="text-gray-600">Total Attendance</p>
-          </div>
-        </CardContent>
-      </Card>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600">{studentData.attendance}%</div>
+              <p className="text-blue-600">Total Attendance</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>This Month</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600">94%</div>
+              <p className="text-green-600">March 2024</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Leave Balance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-blue-600">Sick Leave:</span>
+                <span className="font-bold">3 days</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-blue-600">Personal:</span>
+                <span className="font-bold">2 days</span>
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="w-full mt-2" size="sm">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Apply Leave
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Leave Application</DialogTitle>
+                  </DialogHeader>
+                  <LeaveApplicationForm />
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Subject-wise Attendance */}
       <Card>
@@ -135,15 +175,24 @@ const StudentAttendance: React.FC<StudentAttendanceProps> = ({ studentData }) =>
         <CardContent>
           <div className="space-y-4">
             {attendanceData.map((subject, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium">{subject.subject}</h4>
-                  <p className="text-sm text-gray-600">{subject.present}/{subject.total} classes</p>
+                  <h4 className="font-medium text-blue-800">{subject.subject}</h4>
+                  <p className="text-sm text-blue-600">{subject.present}/{subject.total} classes</p>
+                  <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{width: `${subject.percentage}%`}}
+                    ></div>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <Badge variant={subject.percentage >= 85 ? "default" : subject.percentage >= 75 ? "secondary" : "destructive"}>
+                  <Badge className={subject.percentage >= 85 ? 'bg-green-100 text-green-800' : subject.percentage >= 75 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}>
                     {subject.percentage}%
                   </Badge>
+                  <p className="text-xs text-blue-600 mt-1">
+                    {subject.percentage >= 85 ? 'Good' : subject.percentage >= 75 ? 'Average' : 'Low'}
+                  </p>
                 </div>
               </div>
             ))}

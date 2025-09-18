@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { 
   Home, Users, CreditCard, Building, BookOpen, Bus, 
-  ClipboardList, LogOut, Bell, UserPlus, FileText
+  ClipboardList, LogOut, Bell, UserPlus, FileText, Calendar, MessageSquare
 } from 'lucide-react';
 import StaffAdmissions from '../components/staff/StaffAdmissions';
 import StaffFees from '../components/staff/StaffFees';
@@ -13,6 +13,9 @@ import StaffHostel from '../components/staff/StaffHostel';
 import StaffLibrary from '../components/staff/StaffLibrary';
 import StaffTransport from '../components/staff/StaffTransport';
 import StaffLeaves from '../components/staff/StaffLeaves';
+import AcademicCalendar from '../components/modules/AcademicCalendar';
+import FeedbackSystem from '../components/modules/FeedbackSystem';
+import DocumentVault from '../components/modules/DocumentVault';
 
 const StaffDashboard = () => {
   const { user, logout } = useAuth();
@@ -47,7 +50,10 @@ const StaffDashboard = () => {
     { id: 'hostel', label: 'Hostel Management', icon: Building },
     { id: 'library', label: 'Library Management', icon: BookOpen },
     { id: 'transport', label: 'Transport', icon: Bus },
-    { id: 'leaves', label: 'Leave Applications', icon: ClipboardList }
+    { id: 'leaves', label: 'Leave Applications', icon: ClipboardList },
+    { id: 'calendar', label: 'Academic Calendar', icon: Calendar },
+    { id: 'feedback', label: 'Feedback System', icon: MessageSquare },
+    { id: 'documents', label: 'Documents', icon: FileText }
   ];
 
   const DashboardOverview = () => (
@@ -104,7 +110,7 @@ const StaffDashboard = () => {
       </div>
 
       {/* Today's Summary */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
@@ -134,7 +140,7 @@ const StaffDashboard = () => {
       </Card>
 
       {/* Pending Tasks */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ClipboardList className="h-5 w-5" />
@@ -183,7 +189,7 @@ const StaffDashboard = () => {
       </Card>
 
       {/* Notifications */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
@@ -217,16 +223,19 @@ const StaffDashboard = () => {
       case 'library': return <StaffLibrary />;
       case 'transport': return <StaffTransport />;
       case 'leaves': return <StaffLeaves />;
+      case 'calendar': return <AcademicCalendar />;
+      case 'feedback': return <FeedbackSystem isAdmin={true} />;
+      case 'documents': return <DocumentVault isAdmin={true} />;
       default: return <DashboardOverview />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
+      <div className="w-72 glass-sidebar rounded-r-3xl">
         <div className="p-6 border-b">
-          <h1 className="text-xl font-bold text-gray-800">CampusFlow</h1>
+          <h1 className="text-xl font-bold text-gray-800">Saksham ERP</h1>
           <p className="text-sm text-gray-600">Staff Portal</p>
         </div>
         
@@ -237,8 +246,8 @@ const StaffDashboard = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-gray-100 transition-colors ${
-                  activeTab === item.id ? 'bg-orange-50 text-orange-600 border-r-2 border-orange-600' : 'text-gray-700'
+                className={`w-full flex items-center gap-3 px-6 py-3 text-left transition-colors rounded-xl mx-2 my-1 ${
+                  activeTab === item.id ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -248,7 +257,7 @@ const StaffDashboard = () => {
           })}
         </nav>
 
-        <div className="absolute bottom-0 w-64 p-6 border-t">
+        <div className="absolute bottom-0 w-72 p-6 border-t border-white/40">
           <Button onClick={logout} variant="outline" className="w-full">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
@@ -258,7 +267,7 @@ const StaffDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1">
-        <header className="bg-white shadow-sm border-b">
+        <header className="glass-header">
           <div className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -275,7 +284,7 @@ const StaffDashboard = () => {
           </div>
         </header>
 
-        <main className="p-6">
+        <main className="p-6 space-y-6">
           {renderContent()}
         </main>
       </div>

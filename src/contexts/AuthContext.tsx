@@ -7,6 +7,7 @@ interface User {
   email: string;
   role: string;
   studentId?: string;
+  childId?: string;
 }
 
 interface AuthContextType {
@@ -48,14 +49,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Mock authentication for demo
       const mockUsers = {
-        'admin@example.com': { id: '1', name: 'Admin User', email: 'admin@example.com', role: 'admin' },
-        'faculty@example.com': { id: '2', name: 'Faculty User', email: 'faculty@example.com', role: 'faculty' },
-        'staff@example.com': { id: '3', name: 'Staff User', email: 'staff@example.com', role: 'staff' },
-        'student@example.com': { id: '4', name: 'John Doe', email: 'student@example.com', role: 'student', studentId: 'CS21001' }
+        'admin@college.edu': { id: '1', name: 'Admin User', email: 'admin@college.edu', role: 'admin' },
+        'faculty@college.edu': { id: '2', name: 'Faculty User', email: 'faculty@college.edu', role: 'faculty' },
+        'staff@college.edu': { id: '3', name: 'John Smith', email: 'staff@college.edu', role: 'staff' },
+        'student@college.edu': { id: '4', name: 'John Doe', email: 'student@college.edu', role: 'student', studentId: 'CS21001' },
+        'parent@college.edu': { id: '5', name: 'Sarah Johnson', email: 'parent@college.edu', role: 'parent', childId: 'STU001' }
       };
       
       const userData = mockUsers[email as keyof typeof mockUsers];
-      if (!userData) {
+      if (!userData || (password !== 'admin123' && password !== 'faculty123' && password !== 'staff123' && password !== 'student123' && password !== 'parent123')) {
         throw new Error('Invalid credentials');
       }
       

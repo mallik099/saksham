@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,8 @@ const mockFees: FeeDetail[] = [
 ];
 
 export function FeeDetails() {
+  const [selectedYear, setSelectedYear] = useState('2024');
+  const [filterStatus, setFilterStatus] = useState('all');
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid': return 'bg-green-100 text-green-800';
