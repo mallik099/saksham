@@ -20,8 +20,8 @@ const StudentTransportModule = () => {
     status: 'Allocated',
     driver: 'Ravi Kumar',
     driverContact: '+91 9876543210',
-    conductor: 'Suresh Babu',
-    conductorContact: '+91 9876543211'
+    incharge: 'Suresh Babu',
+    inchargeContact: '+91 9876543211'
   };
 
   const routeSchedule = [
@@ -136,14 +136,14 @@ const StudentTransportModule = () => {
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-gray-600">Conductor</p>
-                <p className="font-medium">{transportInfo.conductor}</p>
+                <p className="text-sm text-gray-600">Incharge</p>
+                <p className="font-medium">{transportInfo.incharge}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Conductor Contact</p>
+                <p className="text-sm text-gray-600">Incharge Contact</p>
                 <p className="font-medium flex items-center">
                   <Phone className="w-4 h-4 mr-2 text-green-500" />
-                  {transportInfo.conductorContact}
+                  {transportInfo.inchargeContact}
                 </p>
               </div>
             </div>

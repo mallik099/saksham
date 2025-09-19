@@ -19,15 +19,25 @@ const ModernLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const newErrors = { email: '', password: '', role: '' };
+    
+    if (!email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Invalid email format';
+    
+    if (!password) newErrors.password = 'Password is required';
+    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    
+    if (!role) newErrors.role = 'Role is required';
+    
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({ email: '', password: '', role: '' });
-
-    if (!email) setErrors(prev => ({ ...prev, email: 'Email is required' }));
-    if (!password) setErrors(prev => ({ ...prev, password: 'Password is required' }));
-    if (!role) setErrors(prev => ({ ...prev, role: 'Role is required' }));
-
-    if (!email || !password || !role) return;
+    
+    if (!validateForm()) return;
 
     setIsLoading(true);
 
@@ -109,7 +119,11 @@ const ModernLogin = () => {
                     type="email"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
+                    }}
+                    className={errors.email ? 'border-red-500' : ''}
                   />
                   {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
                 </div>
@@ -122,8 +136,11 @@ const ModernLogin = () => {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Enter your password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pr-10"
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (errors.password) setErrors(prev => ({ ...prev, password: '' }));
+                      }}
+                      className={`pr-10 ${errors.password ? 'border-red-500' : ''}`}
                     />
                     <button
                       type="button"
@@ -139,7 +156,10 @@ const ModernLogin = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="role">Select role</Label>
-                  <Select value={role} onValueChange={setRole}>
+                  <Select value={role} onValueChange={(value) => {
+                    setRole(value);
+                    if (errors.role) setErrors(prev => ({ ...prev, role: '' }));
+                  }}>
                     <SelectTrigger id="role">
                       <SelectValue placeholder="Choose your role" />
                     </SelectTrigger>

@@ -6,6 +6,7 @@ import {
   ClipboardList, CreditCard, GraduationCap, TrendingUp, 
   Clock, Award, Bell, Briefcase, AlertCircle 
 } from 'lucide-react';
+import StudentMentorSelection from './StudentMentorSelection';
 
 const StudentDashboard = () => {
   const metrics = [
@@ -50,6 +51,9 @@ const StudentDashboard = () => {
           );
         })}
       </div>
+
+      {/* Mentor Selection */}
+      <StudentMentorSelection />
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   User, Home, Calendar, ClipboardList, GraduationCap, CreditCard, 
-  BookOpen, Building, Bus, Settings, LogOut, Bell, Download
+  BookOpen, Building, Bus, Settings, LogOut, Bell, Download, Users
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -29,6 +29,7 @@ const StudentLayout: React.FC<StudentLayoutProps> = ({ children, activeSection, 
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'timetable', label: 'Time Table', icon: Calendar },
     { id: 'attendance', label: 'Attendance', icon: ClipboardList },
+    { id: 'mentorship', label: 'Mentorship', icon: Users },
     { id: 'exams', label: 'Exams', icon: GraduationCap },
     { id: 'fees', label: 'Fees', icon: CreditCard },
     { id: 'library', label: 'Library', icon: BookOpen },

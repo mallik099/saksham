@@ -123,29 +123,48 @@ const navigationItems = [
   }
 ];
 
-const AdminSidebar = () => {
+interface AdminSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen = true, onClose }) => {
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-      <div className="flex h-full flex-col">
-        <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
-          <h1 className="text-xl font-bold text-gray-800 dark:text-white">Saksham ERP</h1>
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0`}>
+        <div className="flex h-full flex-col">
+          <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
+            <h1 className="text-xl font-bold text-gray-800 dark:text-white">Saksham ERP</h1>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <nav className="space-y-2">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => onClose && onClose()}
+                  className="flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 transition-colors"
+                >
+                  <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+                  <span className="truncate">{item.name}</span>
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <nav className="space-y-2">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-              >
-                <item.icon className="h-5 w-5 mr-3" />
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

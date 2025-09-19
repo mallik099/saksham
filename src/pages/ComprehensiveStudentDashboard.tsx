@@ -10,6 +10,7 @@ import StudentLibraryModule from '../components/student/StudentLibraryModule';
 import StudentHostelModule from '../components/student/StudentHostelModule';
 import StudentTransportModule from '../components/student/StudentTransportModule';
 import StudentSettingsModule from '../components/student/StudentSettingsModule';
+import StudentMentorshipAndClasses from '../components/student/StudentMentorshipAndClasses';
 
 const ComprehensiveStudentDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -34,6 +35,8 @@ const ComprehensiveStudentDashboard = () => {
         return <StudentHostelModule />;
       case 'transport':
         return <StudentTransportModule />;
+      case 'mentorship':
+        return <StudentMentorshipAndClasses />;
       case 'settings':
         return <StudentSettingsModule />;
       default:

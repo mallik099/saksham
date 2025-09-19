@@ -7,11 +7,14 @@ import { Label } from '../ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { 
   User, Mail, Phone, Calendar, Home, GraduationCap, 
-  Download, Edit, MapPin, Users, Award 
+  Download, Edit, MapPin, Users, Award, FileText, CreditCard, BookOpen 
 } from 'lucide-react';
+import StudentMarksheets from './StudentMarksheets';
+import StudentBonafideCertificate from './StudentBonafideCertificate';
+import StudentIdCard from './StudentIdCard';
 
 const StudentProfileModule = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({
     name: 'Arjun Patel',
     rollNumber: 'CS21B001',
@@ -19,19 +22,85 @@ const StudentProfileModule = () => {
     phone: '+91 9876543210',
     address: 'Koramangala, Bangalore, Karnataka 560034',
     course: 'Computer Science Engineering',
+    department: 'Computer Science',
     year: '3rd Year',
     semester: '6th Semester',
     section: 'A',
     admissionYear: '2021',
-    cgpa: '8.4'
+    cgpa: '8.4',
+    bloodGroup: 'B+',
+    emergencyContact: '+91 9876543200'
   });
 
-  const handleDownloadDocument = (docType: string) => {
-    // Mock download functionality
-    console.log(`Downloading ${docType}...`);
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'marksheets':
+        return <StudentMarksheets />;
+      case 'bonafide':
+        return <StudentBonafideCertificate />;
+      case 'idcard':
+        return <StudentIdCard studentData={profileData} />;
+      default:
+        return renderProfileContent();
+    }
+  };
+
+  const renderProfileContent = () => (
+
   return (
+    <div className="space-y-6">
+      {/* Navigation Tabs */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={activeTab === 'profile' ? 'default' : 'outline'}
+              onClick={() => handleTabChange('profile')}
+              className="flex items-center"
+            >
+              <User className="w-4 h-4 mr-2" />
+              Profile
+            </Button>
+            <Button
+              variant={activeTab === 'marksheets' ? 'default' : 'outline'}
+              onClick={() => handleTabChange('marksheets')}
+              className="flex items-center"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Marksheets
+            </Button>
+            <Button
+              variant={activeTab === 'bonafide' ? 'default' : 'outline'}
+              onClick={() => handleTabChange('bonafide')}
+              className="flex items-center"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Bonafide Certificate
+            </Button>
+            <Button
+              variant={activeTab === 'idcard' ? 'default' : 'outline'}
+              onClick={() => handleTabChange('idcard')}
+              className="flex items-center"
+            >
+              <CreditCard className="w-4 h-4 mr-2" />
+              Digital ID Card
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tab Content */}
+      {renderTabContent()}
+    </div>
+  );
+};
+
+export default StudentProfileModule;
+
     <div className="space-y-6">
       {/* Profile Header */}
       <Card>
@@ -50,18 +119,18 @@ const StudentProfileModule = () => {
             <div className="flex space-x-2">
               <Button 
                 variant="outline" 
-                onClick={() => handleDownloadDocument('ID Card')}
+                onClick={() => handleTabChange('idcard')}
                 className="flex items-center"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <CreditCard className="w-4 h-4 mr-2" />
                 ID Card
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => handleDownloadDocument('Bonafide')}
+                onClick={() => handleTabChange('bonafide')}
                 className="flex items-center"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <FileText className="w-4 h-4 mr-2" />
                 Bonafide
               </Button>
             </div>
@@ -169,26 +238,26 @@ const StudentProfileModule = () => {
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center"
-              onClick={() => handleDownloadDocument('Digital ID Card')}
+              onClick={() => handleTabChange('idcard')}
             >
-              <Download className="w-6 h-6 mb-2" />
+              <CreditCard className="w-6 h-6 mb-2" />
               Digital ID Card
             </Button>
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center"
-              onClick={() => handleDownloadDocument('Bonafide Certificate')}
+              onClick={() => handleTabChange('bonafide')}
             >
-              <Download className="w-6 h-6 mb-2" />
+              <FileText className="w-6 h-6 mb-2" />
               Bonafide Certificate
             </Button>
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center"
-              onClick={() => handleDownloadDocument('Marksheet')}
+              onClick={() => handleTabChange('marksheets')}
             >
-              <Download className="w-6 h-6 mb-2" />
-              Marksheet
+              <BookOpen className="w-6 h-6 mb-2" />
+              Marksheets
             </Button>
           </div>
         </CardContent>
@@ -256,6 +325,4 @@ const StudentProfileModule = () => {
       </div>
     </div>
   );
-};
-
-export default StudentProfileModule;
+  }

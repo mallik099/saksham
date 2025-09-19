@@ -6,7 +6,7 @@ import { Badge } from '../components/ui/badge';
 import { 
   Home, User, Clock, DollarSign, CreditCard, Users, 
   FileText, Bell, Settings, LogOut, Download, Eye,
-  Calendar, BookOpen, GraduationCap, MapPin
+  Calendar, BookOpen, GraduationCap, MapPin, Bus
 } from 'lucide-react';
 
 // Import Faculty Components
@@ -21,6 +21,8 @@ import FacultyAttendance from '../components/faculty/FacultyAttendance';
 import FacultyTimetable from '../components/faculty/FacultyTimetable';
 import FacultyExams from '../components/faculty/FacultyExams';
 import FacultyIdCard from '../components/faculty/FacultyIdCard';
+import FacultyMenteeManagement from '../components/faculty/FacultyMenteeManagement';
+import FacultyTransport from '../components/faculty/FacultyTransport';
 
 const ModernFacultyDashboard = () => {
   const { user, logout } = useAuth();
@@ -66,6 +68,7 @@ const ModernFacultyDashboard = () => {
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'profile', label: 'Profile Section', icon: User },
+    { id: 'mentee-management', label: 'Mentee Management', icon: Users },
     { id: 'attendance', label: 'Attendance Management', icon: Users },
     { id: 'timetable', label: 'Timetable', icon: Calendar },
     { id: 'exams', label: 'Exams & Grades', icon: BookOpen },
@@ -73,6 +76,7 @@ const ModernFacultyDashboard = () => {
     { id: 'financial', label: 'Financial Details', icon: DollarSign },
     { id: 'class-incharge', label: 'Class Incharge Info', icon: Users },
     { id: 'post-info', label: 'Post Information', icon: GraduationCap },
+    { id: 'transport', label: 'Transport', icon: Bus },
     { id: 'id-card', label: 'ID Card', icon: MapPin },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
@@ -293,6 +297,7 @@ const ModernFacultyDashboard = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardOverview />;
       case 'profile': return <FacultyProfile facultyData={facultyData} />;
+      case 'mentee-management': return <FacultyMenteeManagement />;
       case 'attendance': return <FacultyAttendance facultyData={facultyData} />;
       case 'timetable': return <FacultyTimetable facultyData={facultyData} />;
       case 'exams': return <FacultyExams facultyData={facultyData} />;
@@ -300,6 +305,7 @@ const ModernFacultyDashboard = () => {
       case 'financial': return <FacultyFinancialDetails facultyData={facultyData} />;
       case 'class-incharge': return <FacultyClassIncharge facultyData={facultyData} />;
       case 'post-info': return <FacultyPostInfo facultyData={facultyData} />;
+      case 'transport': return <FacultyTransport />;
       case 'id-card': return <FacultyIdCard facultyData={facultyData} />;
       case 'notifications': return <FacultyNotifications />;
       case 'settings': return <FacultySettings facultyData={facultyData} />;

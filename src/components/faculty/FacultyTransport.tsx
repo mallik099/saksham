@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Bus, MapPin, Clock, CreditCard } from 'lucide-react';
 
-const StudentTransport = ({ studentData }: { studentData: any }) => {
-  const [isTracking, setIsTracking] = useState(false);
-  const [busLocation, setBusLocation] = useState('Starting Point');
-  
-  useEffect(() => {
-    if (isTracking) {
-      const interval = setInterval(() => {
-        setBusLocation(prev => prev === 'Starting Point' ? 'En Route' : 'Arrived');
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [isTracking]);
+const FacultyTransport = () => {
   const transportData = {
     route: 'Route 3 - City Center',
     busNumber: 'RJ-14-AB-1234',
@@ -121,4 +110,4 @@ const StudentTransport = ({ studentData }: { studentData: any }) => {
   );
 };
 
-export default StudentTransport;
+export default FacultyTransport;
